@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Card Swap</title>
+<style>
+	h1, h2 {
+		text-align: center;
+	}
+	h1 {
+		margin-bottom: 0;
+	}
+	h2 {
+		color:gray;
+		font-size: 1.2em;
+		margin-top: 0;
+	}
+	.card {
+		width: 30%;
+		height: 30%;
+	}
+</style>
+<script type="text/javascript">
+	//Random generator
+	function randomGen(n) {
+		return Math.floor((Math.random() * n) + 1);
+}
+	//Card generator
+	function cardGen() {
+		//Suit generator
+		var sv = randomGen(4);
+		//Value generator
+		var vv = randomGen(13);
+		return [sv,vv];
+}
+	//Cardname converter
+	function cardName() {
+		var card=cardGen();
+		var s = "";
+		switch(card[0]) {
+			case 1:
+				s="spades";
+				break;
+			case 2:
+				s="hearts";
+				break;
+			case 3:
+				s="clubs";
+				break;
+			case 4:
+				s="diamonds";
+				break;
+		}
+		var v = "";
+		switch(card[1]) {
+			case 1:
+				v="ace";
+				break;
+			case 11:
+				v="jack";
+				break;
+			case 12:
+				v="queen";
+				break;
+			case 13:
+				v="king";
+				break;
+			default:
+				v=card[1].toString();
+		}
+		return v+"_of_"+s;
+	}
+	//Array of cards
+	function cardList(n) {
+		var x = [];
+		for (i=0; i<n; i++){
+			var t = cardName();
+			//Check for repeat
+			for (y=0; y<x.length; y++){
+				if (x[y]==t){t=cardName()}
+			}
+			x[i]=t;
+		}
+		return x;
+		//document.getElementById("cards").innerHTML=x;
+}
+	//DOM create card in Cards div
+	function createCard(card) {
+		var x = document.createElement("img");
+		x.setAttribute("src","./cards/"+card+".png");
+		x.setAttribute("alt",card);
+		x.setAttribute("class","card");
+		document.getElementById("cards").appendChild(x);
+}
+	//DOM create array of cards in Cards div
+	function createCards(n) {
+		//reset cards
+		x=cardList(n);
+		for (i=0; i<x.length; i++){
+				createCard(x[i]);
+			}
+}
+	//sort
+
+</script>
+</head>
+
+<body>
+<h1>Card Swap</h1>
+<h2>for noobs</h2>
+<!--align left 2/3, buttons for card counts, sample sets generation-->
+<div class="button">
+<button onclick="createCards(3)">3</button>
+<button onclick="createCard('2_of_clubs')">2Club</button>
+</div>
+<!--align right 1/3, counts of card swaps with history and reset button-->
+<div class="count">
+</div>
+<!--bottom 2/3 with cards-->
+<div class="cards" id="cards">
+<!--<img src="./cards/2_of_clubs.png" />-->
+</div>
+</body>
+</html>
