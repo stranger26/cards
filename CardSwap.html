@@ -15,8 +15,18 @@
 		margin-top: 0;
 	}
 	.card {
-		width: 30%;
-		height: 30%;
+		width: 10%;
+		height: 10%;
+		cursor: move;
+	}
+	[draggable] {
+  		-moz-user-select: none;
+  		-khtml-user-select: none;
+  		-webkit-user-select: none;
+  		user-select: none;
+  		/* Required to make elements draggable in old WebKit */
+  		-khtml-user-drag: element;
+  		-webkit-user-drag: element;
 	}
 </style>
 <script type="text/javascript">
@@ -84,21 +94,37 @@
 		//document.getElementById("cards").innerHTML=x;
 }
 	//DOM create card in Cards div
-	function createCard(card) {
+	function createCard(card,i) {
 		var x = document.createElement("img");
-		x.setAttribute("src","./cards/"+card+".png");
+		x.setAttribute("src","./cards/"+card+".svg");
 		x.setAttribute("alt",card);
 		x.setAttribute("class","card");
+		//x.setAttribute("draggable","true");
+		//x.setAttribute("ondragstart","handleDragStart(event)");
+		x.setAttribute("id","img"+i);
+		//x.setAttribute("ondrop","handleDrop(event)");
+		//x.setAttribute("ondragover","allowDrop(event)");
+		//x.setAttribute("ondragend","handleDragEnd(event)");
 		document.getElementById("cards").appendChild(x);
 }
+	//reset cards
+	function clearCards() {
+		var element = document.getElementById("cards");
+		while (element.firstChild) {
+  		element.removeChild(element.firstChild);
+}
+	}
 	//DOM create array of cards in Cards div
 	function createCards(n) {
 		//reset cards
+		clearCards();
 		x=cardList(n);
 		for (i=0; i<x.length; i++){
-				createCard(x[i]);
+				createCard(x[i],i);
 			}
 }
+	//Drag and drop
+
 	//sort
 
 </script>
