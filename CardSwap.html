@@ -133,11 +133,11 @@
 	//toggle image opacity
 	function imageToggle(img) {
     	img.style.display = "inline-block";
-		if (activeClick>2) {
-			alert("You've chosen too many.");
-		} else if (img.style.opacity==0.4){
+		if (img.style.opacity==0.4){
 			img.style.opacity=1;
 			activeClick-=1;
+		} else if (activeClick>1) {
+			alert("You've chosen too many");
 		} else {
 			img.style.opacity=0.4;
 			activeClick+=1;
