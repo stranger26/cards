@@ -14,6 +14,9 @@
 		font-size: 1.2em;
 		margin-top: 0;
 	}
+	button {
+		cursor: pointer;
+	}
 	.card {
 		width: 10%;
 		height: 10%;
@@ -31,12 +34,12 @@
 		margin-top: 0;
   		padding: 7px 10px;
   		text-transform: none;
-  		transition: all 0.3s ease 0s;
-  		-moz-transition: all 0.3s ease 0s;
-  		-webkit-transition: all 0.3s ease 0s;
   		width: 50px; /* auto */
   		text-align: center;
   		background-color: #0091ea;
+	}
+	.button:hover {
+		background-color: gray;
 	}
 	.active {
 		opacity: 0.4;
@@ -192,6 +195,34 @@
 		}
 		updateActive();
 }
+	var undoCount=0;
+	//Undo
+	function undo() {
+			undoCount-=1;
+			if (undoCount=0) {
+				document.getElementById("undo").disabled;
+			}
+			/*var [a,b] = document.getElementsByClassName("active");
+			ano = document.getElementById(a.id);
+			bno = document.getElementById(b.id);
+			aid=a.id;
+			bid=b.id;
+			anew=setCard(aid);
+			anew.setAttribute("class","card");
+			bnew=setCard(bid);
+			anew.setAttribute("class","card");
+			//document.getElementById("activeclick").innerHTML = "a="+aid+"b="+bid;
+			document.getElementById("cards").replaceChild(anew,bno);
+			document.getElementById("cards").replaceChild(bnew,ano);
+			activeClick=0;
+			totalSwap++;
+			updateTotal();*/
+	}
+	//Redo
+	function redo() {
+			undoCount=1;
+			document.getElementById("undo").attributes.removeNamedItem("disabled");
+	}
 	//Swap
 	function swap() {
 		if (activeClick!=2) {
@@ -211,7 +242,9 @@
 			document.getElementById("cards").replaceChild(bnew,ano);
 			activeClick=0;
 			totalSwap++;
+			updateActive();
 			updateTotal();
+			redo();
 			}
 	}
 	function copyText() {
@@ -243,8 +276,9 @@
 <p>Generate 
 <input type="number" id="number" name="number" value="3" min="0" max="52" size="5" maxlength="3">
 cards 
-<input type="submit" value="Go" onclick="createXCards()">
+<button type="submit" onclick="createXCards()">Go</button>
 <button class="js-textareacopybtn">Copy List of Cards</button>
+<!--<button class="undo" id="undo" onclick="undo()" disabled>Undo</button>-->
 </p>
 <textarea id="listcards" class="js-copytextarea">List of Cards:</textarea>
 <p class="button" id="swap" onclick="swap()">Swap</p>
