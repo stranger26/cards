@@ -100,6 +100,7 @@
 			if (x.indexOf(t)<0) x.push(t);
 			else i--;
 		}
+		listofCards=x;
 		return x;
 		//document.getElementById("cards").innerHTML=x;
 }	
@@ -128,7 +129,7 @@
 		var x=setCard(card);
 		document.getElementById("cards").appendChild(x);
 	}
-	//reset cards
+	//Reset cards
 	function clearCards() {
 		var element = document.getElementById("cards");
 		while (element.firstChild) {
@@ -136,6 +137,13 @@
   		activeClick=0;
 }
 	}
+	var listofCards=[];
+	//update clipboard
+	function updateCardlist() {
+		document.getElementById("listcards").innerHTML = "List of Cards: "+listofCards.toString();
+		copyText();
+	}
+	
 	//DOM create array of cards in Cards div
 	function createCards(n) {
 		//reset cards
@@ -144,6 +152,7 @@
 		for (i=0; i<x.length; i++){
 				createCard(x[i]);
 			}
+		updateCardlist();
 }
 	//DOM create cards get X from textfield
 	function createXCards() {
@@ -159,11 +168,11 @@
 	//Click
 	var activeClick = 0;
 	var totalSwap = 0;
-	//update clicks on display
+	//Update clicks on display
 	function updateActive() {
 		document.getElementById("activeclick").innerHTML = "Active click(s): "+activeClick;
 	}
-	//update swaps on display
+	//Update swaps on display
 	function updateTotal() {
 		document.getElementById("totalswap").innerHTML = "Total swap(s): "+totalSwap;
 	}
@@ -183,17 +192,6 @@
 		}
 		updateActive();
 }
-	//Replace image
-	function replaceImage(old,cur) {
-		var oldd = document.getElementById(old);
-		oldd.id = cur;
-		oldd.src = imageFormat(cur);
-		oldd.alt = cur;
-		var curr = document.getElementById(cur);
-		curr.id = old;
-		curr.src = imageFormat(old);
-		curr.alt = old;
-	}
 	//Swap
 	function swap() {
 		if (activeClick!=2) {
@@ -216,7 +214,22 @@
 			updateTotal();
 			}
 	}
+	function copyText() {
+	var copyTextareaBtn = document.querySelector('.js-textareacopybtn');
 
+	copyTextareaBtn.addEventListener('click', function(event) {
+  	var copyTextarea = document.querySelector('.js-copytextarea');
+  	copyTextarea.select();
+
+  	try {
+    	var successful = document.execCommand('copy');
+    	var msg = successful ? 'successful' : 'unsuccessful';
+    	console.log('Copying text command was ' + msg);
+  	} catch (err) {
+    	console.log('Oops, unable to copy');
+  }
+});
+}
 </script>
 </head>
 
@@ -231,7 +244,9 @@
 <input type="number" id="number" name="number" value="3" min="0" max="52" size="5" maxlength="3">
 cards 
 <input type="submit" value="Go" onclick="createXCards()">
+<button class="js-textareacopybtn">Copy List of Cards</button>
 </p>
+<textarea id="listcards" class="js-copytextarea">List of Cards:</textarea>
 <p class="button" id="swap" onclick="swap()">Swap</p>
 </div>
 <!--align right 1/3, counts of card swaps with history and reset button-->
