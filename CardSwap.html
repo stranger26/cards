@@ -15,8 +15,31 @@
 		margin-top: 0;
 	}
 	.card {
-		width: 30%;
-		height: 30%;
+		width: 10%;
+		height: 10%;
+		cursor: pointer;
+	}
+	.button {
+		border: 0 none;
+  		border-radius: 2px 2px 2px 2px;
+  		color: #FFFFFF;
+  		cursor: pointer;
+  		display: block;
+  		line-height: 20px;
+  		margin-right: auto;
+		margin-left: auto;
+		margin-top: 0;
+  		padding: 7px 10px;
+  		text-transform: none;
+  		transition: all 0.3s ease 0s;
+  		-moz-transition: all 0.3s ease 0s;
+  		-webkit-transition: all 0.3s ease 0s;
+  		width: 50px; /* auto */
+  		text-align: center;
+  		background-color: #0091ea;
+	}
+	.active {
+		opacity: 0.4;
 	}
 </style>
 <script type="text/javascript">
@@ -69,51 +92,153 @@
 		}
 		return v+"_of_"+s;
 	}
-	//Array of cards
+	//Array of cards without repeat
 	function cardList(n) {
 		var x = [];
 		for (i=0; i<n; i++){
 			var t = cardName();
-			//Check for repeat
-			for (y=0; y<x.length; y++){
-				if (x[y]==t){t=cardName()}
-			}
-			x[i]=t;
+			if (x.indexOf(t)<0) x.push(t);
+			else i--;
 		}
 		return x;
 		//document.getElementById("cards").innerHTML=x;
-}
+}	
+	//Image relative link formatter
+	function imageFormat(card) {
+		return "./cards/"+card+".svg";
+	}
 	//DOM create card in Cards div
-	function createCard(card) {
+	function setCard(card) {
 		var x = document.createElement("img");
-		x.setAttribute("src","./cards/"+card+".png");
+		x.setAttribute("src",imageFormat(card));
 		x.setAttribute("alt",card);
 		x.setAttribute("class","card");
-		document.getElementById("cards").appendChild(x);
+		//x.setAttribute("draggable","true");
+		//x.setAttribute("ondragstart","handleDragStart(event)");
+		x.setAttribute("id",card);
+		x.setAttribute("onmousedown","imageToggle(this)");
+		x.setAttribute("opacity",1);
+		//x.setAttribute("data-prev","");
+		//x.setAttribute("ondrop","handleDrop(event)");
+		//x.setAttribute("ondragover","allowDrop(event)");
+		//x.setAttribute("ondragend","handleDragEnd(event)");
+		return x;
 }
+	function createCard(card) {
+		var x=setCard(card);
+		document.getElementById("cards").appendChild(x);
+	}
+	//reset cards
+	function clearCards() {
+		var element = document.getElementById("cards");
+		while (element.firstChild) {
+  		element.removeChild(element.firstChild);
+  		activeClick=0;
+}
+	}
 	//DOM create array of cards in Cards div
 	function createCards(n) {
 		//reset cards
+		clearCards();
 		x=cardList(n);
 		for (i=0; i<x.length; i++){
 				createCard(x[i]);
 			}
 }
-	//sort
+	//DOM create cards get X from textfield
+	function createXCards() {
+		var n = document.getElementById("number").value;
+		if (n>52) {
+			alert("Too many cards!");
+		} else if (n<0) {
+			alert("You owe me cards!");
+		} else {
+		createCards(n);
+		}
+}
+	//Click
+	var activeClick = 0;
+	var totalSwap = 0;
+	//update clicks on display
+	function updateActive() {
+		document.getElementById("activeclick").innerHTML = "Active click(s): "+activeClick;
+	}
+	//update swaps on display
+	function updateTotal() {
+		document.getElementById("totalswap").innerHTML = "Total swap(s): "+totalSwap;
+	}
+	//Toggle image opacity
+	function imageToggle(img) {
+    	img.style.display = "inline-block";
+		if (img.style.opacity==0.4){
+			//img.style.opacity=1;
+			img.className-=' active';
+			activeClick-=1;
+		} else if (activeClick>1) {
+			alert("You've chosen too many");
+		} else {
+			//img.style.opacity=0.4;
+			img.className+=' active';
+			activeClick+=1;
+		}
+		updateActive();
+}
+	//Replace image
+	function replaceImage(old,cur) {
+		var oldd = document.getElementById(old);
+		oldd.id = cur;
+		oldd.src = imageFormat(cur);
+		oldd.alt = cur;
+		var curr = document.getElementById(cur);
+		curr.id = old;
+		curr.src = imageFormat(old);
+		curr.alt = old;
+	}
+	//Swap
+	function swap() {
+		if (activeClick!=2) {
+			alert("Choose more.");
+		} else {
+			var [a,b] = document.getElementsByClassName("active");
+			ano = document.getElementById(a.id);
+			bno = document.getElementById(b.id);
+			aid=a.id;
+			bid=b.id;
+			anew=setCard(aid);
+			anew.setAttribute("class","card");
+			bnew=setCard(bid);
+			anew.setAttribute("class","card");
+			//document.getElementById("activeclick").innerHTML = "a="+aid+"b="+bid;
+			document.getElementById("cards").replaceChild(anew,bno);
+			document.getElementById("cards").replaceChild(bnew,ano);
+			activeClick=0;
+			totalSwap++;
+			updateTotal();
+			}
+	}
 
 </script>
 </head>
 
 <body>
 <h1>Card Swap</h1>
-<h2>for noobs</h2>
+<h2>A deck of cards</h2>
 <!--align left 2/3, buttons for card counts, sample sets generation-->
-<div class="button">
-<button onclick="createCards(3)">3</button>
-<button onclick="createCard('2_of_clubs')">2Club</button>
+<div class="buttons">
+<!--<button onclick="createCards(3)">3</button>
+<button onclick="createCard('2_of_clubs')">2Club</button>-->
+<p>Generate 
+<input type="number" id="number" name="number" value="3" min="0" max="52" size="5" maxlength="3">
+cards 
+<input type="submit" value="Go" onclick="createXCards()">
+</p>
+<p class="button" id="swap" onclick="swap()">Swap</p>
 </div>
 <!--align right 1/3, counts of card swaps with history and reset button-->
 <div class="count">
+<!--display selected, swaps and -->
+<p id="activeclick">Active click(s): 0</p>
+<p id="totalswap">Total swap(s): 0</p>
 </div>
 <!--bottom 2/3 with cards-->
 <div class="cards" id="cards">
