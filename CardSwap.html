@@ -64,36 +64,36 @@
 		var s = "";
 		switch(card[0]) {
 			case 1:
-				s="spades";
+				s="Spades";
 				break;
 			case 2:
-				s="hearts";
+				s="Hearts";
 				break;
 			case 3:
-				s="clubs";
+				s="Clubs";
 				break;
 			case 4:
-				s="diamonds";
+				s="Diamonds";
 				break;
 		}
 		var v = "";
 		switch(card[1]) {
 			case 1:
-				v="ace";
+				v="Ace";
 				break;
 			case 11:
-				v="jack";
+				v="Jack";
 				break;
 			case 12:
-				v="queen";
+				v="Queen";
 				break;
 			case 13:
-				v="king";
+				v="King";
 				break;
 			default:
 				v=card[1].toString();
 		}
-		return v+"_of_"+s;
+		return v+"Of"+s;
 	}
 	//Array of cards without repeat
 	function cardList(n) {
@@ -105,7 +105,6 @@
 		}
 		listofCards=x;
 		return x;
-		//document.getElementById("cards").innerHTML=x;
 }	
 	//Image relative link formatter
 	function imageFormat(card) {
@@ -117,15 +116,9 @@
 		x.setAttribute("src",imageFormat(card));
 		x.setAttribute("alt",card);
 		x.setAttribute("class","card");
-		//x.setAttribute("draggable","true");
-		//x.setAttribute("ondragstart","handleDragStart(event)");
 		x.setAttribute("id",card);
 		x.setAttribute("onmousedown","imageToggle(this)");
 		x.setAttribute("opacity",1);
-		//x.setAttribute("data-prev","");
-		//x.setAttribute("ondrop","handleDrop(event)");
-		//x.setAttribute("ondragover","allowDrop(event)");
-		//x.setAttribute("ondragend","handleDragEnd(event)");
 		return x;
 }
 	function createCard(card) {
@@ -183,13 +176,11 @@
 	function imageToggle(img) {
     	img.style.display = "inline-block";
 		if (img.style.opacity==0.4){
-			//img.style.opacity=1;
 			img.className-=' active';
 			activeClick-=1;
 		} else if (activeClick>1) {
 			alert("You've chosen too many");
 		} else {
-			//img.style.opacity=0.4;
 			img.className+=' active';
 			activeClick+=1;
 		}
@@ -237,7 +228,6 @@
 			anew.setAttribute("class","card");
 			bnew=setCard(bid);
 			anew.setAttribute("class","card");
-			//document.getElementById("activeclick").innerHTML = "a="+aid+"b="+bid;
 			document.getElementById("cards").replaceChild(anew,bno);
 			document.getElementById("cards").replaceChild(bnew,ano);
 			activeClick=0;
@@ -291,7 +281,6 @@ cards
 </div>
 <!--bottom 2/3 with cards-->
 <div class="cards" id="cards">
-<!--<img src="./cards/2_of_clubs.png" />-->
 </div>
 </body>
 </html>
