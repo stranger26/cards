@@ -21,6 +21,7 @@
 		width: 10%;
 		height: 10%;
 		cursor: pointer;
+		opacity: 1;
 	}
 	.button {
 		border: 0 none;
@@ -153,15 +154,19 @@
 	function createCard(card) {
 		var x=setCard(card);
 		document.getElementById("cards").appendChild(x);
-	}
+}
 	//Reset cards
 	function clearCards() {
 		var element = document.getElementById("cards");
 		while (element.firstChild) {
   		element.removeChild(element.firstChild);
+  		//Reset clicks
   		activeClick=0;
-}
+  		updateActive();
+  		totalSwap=0;
+  		updateTotal();
 	}
+}
 	//update clipboard
 	function updateCardlist() {
 		var listofcards = cardListFormatText(listofCards);
@@ -203,13 +208,14 @@
 	//Toggle image opacity
 	function imageToggle(img) {
     	img.style.display = "inline-block";
-		if (img.style.opacity==0.4){
-			img.className-=' active';
+		if (img.getAttribute("class")=="card active"){
+			img.setAttribute("class","card");
 			activeClick-=1;
 		} else if (activeClick>1) {
 			alert("You've chosen too many");
 		} else {
-			img.className+=' active';
+			//img.className+=' active';
+			img.setAttribute("class","card active");
 			activeClick+=1;
 		}
 		updateActive();
@@ -242,19 +248,19 @@
 			document.getElementById("undo").attributes.removeNamedItem("disabled");
 }
 	//Swap
-	function swap() {
-		if (activeClick!=2) {
+	function swap(aid,bid) {
+		/*if (activeClick!=2) {
 			alert("Choose more.");
 		} else {
 			var x = document.getElementsByClassName("active");
-			ano = document.getElementById(x[0].id);
-			bno = document.getElementById(x[1].id);
-			aid=a.id;
-			bid=b.id;
-			anew=setCard(aid);
-			anew.setAttribute("class","card");
-			bnew=setCard(bid);
-			anew.setAttribute("class","card");
+			var ano = document.getElementById(x[0].id);
+			var bno = document.getElementById(x[1].id);
+			var aid=x[0].id;
+			var bid=x[1].id;*/
+			var anew=setCard(aid);
+			//anew.setAttribute("class","card");
+			var bnew=setCard(bid);
+			//anew.setAttribute("class","card");
 			document.getElementById("cards").replaceChild(anew,bno);
 			document.getElementById("cards").replaceChild(bnew,ano);
 			activeClick=0;
@@ -262,7 +268,20 @@
 			updateActive();
 			updateTotal();
 			redo();
-			}
+			//}
+}
+	//ActiveSwap
+	function activeSwap() {
+		if (activeClick!=2) {
+			alert("Choose more.");
+		} else {
+			var x = document.getElementsByClassName("active");
+			ano = document.getElementById(x[0].id);
+			bno = document.getElementById(x[1].id);
+			var aid=x[0].id;
+			var bid=x[1].id;
+			swap(aid,bid);
+	}
 }
 	//Copy cards to clipboard
 	function copyText() {
@@ -281,11 +300,26 @@
  		}
 	});
 }
-	//Allie Algorithm
+//Allie Algorithm
+	//Check Spade
+	function checkSpade(cards) {
+		for (i=0; i<cards.length; i++) {
+			if (cards[0][0]=="Spades") {
+				if (cards[1][0]!="Spades") {
+					swap(cardFormatImage(cards[0][0]),cardFormatImage(cards[1][0]));
+				}
+			}
+		}
+}
+	//Main
 	function allie(){
 		var comparison=0;
 		var prevswap=0;
 		var original=listofCards;
+		var working=[];
+		//create solution cards
+		checkSpade(original);
+
 
 }
 </script>
@@ -303,10 +337,11 @@
 cards 
 <button type="submit" onclick="createXCards()">Go</button>
 <button class="js-textareacopybtn">Copy List of Cards</button>
-<!--<button class="undo" id="undo" onclick="undo()" disabled>Undo</button>-->
+<!--<button class="algorithm" onclick="allie()">Default Algorithm</button>
+<button class="undo" id="undo" onclick="undo()" disabled>Undo</button>-->
 </p>
 <textarea id="listcards" class="js-copytextarea">List of Cards:</textarea>
-<p class="button" id="swap" onclick="swap()">Swap</p>
+<p class="button" id="swap" onclick="activeSwap()">Swap</p>
 </div>
 <!--align right 1/3, counts of card swaps with history and reset button-->
 <div class="count">
