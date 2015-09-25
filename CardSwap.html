@@ -219,9 +219,9 @@
 		if (activeClick!=2) {
 			alert("Choose more.");
 		} else {
-			var [a,b] = document.getElementsByClassName("active");
-			ano = document.getElementById(a.id);
-			bno = document.getElementById(b.id);
+			var x = document.getElementsByClassName("active");
+			ano = document.getElementById(x[0].id);
+			bno = document.getElementById(x[1].id);
 			aid=a.id;
 			bid=b.id;
 			anew=setCard(aid);
@@ -237,6 +237,7 @@
 			redo();
 			}
 	}
+	//Copy cards to clipboard
 	function copyText() {
 	var copyTextareaBtn = document.querySelector('.js-textareacopybtn');
 
@@ -250,9 +251,11 @@
     	console.log('Copying text command was ' + msg);
   	} catch (err) {
     	console.log('Oops, unable to copy');
-  }
-});
+ 		}
+	});
 }
+	//Allie Algorithm
+
 </script>
 </head>
 
