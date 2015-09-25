@@ -46,59 +46,72 @@
 	}
 </style>
 <script type="text/javascript">
+	//Global variables
+	var undoCount=0;
+	var listofCards=[];
+	var activeClick = 0;
+	var totalSwap = 0;
 	//Random generator
 	function randomGen(n) {
 		return Math.floor((Math.random() * n) + 1);
 }
 	//Card generator
 	function cardGen() {
-		//Suit generator
-		var sv = randomGen(4);
-		//Value generator
-		var vv = randomGen(13);
-		return [sv,vv];
+		//Suit & Value generator
+		var sv = [randomGen(4),randomGen(13)];
+		return sv;
 }
 	//Cardname converter
 	function cardName() {
 		var card=cardGen();
-		var s = "";
+		var sv = [];
 		switch(card[0]) {
 			case 1:
-				s="Spades";
+				sv[0]="Spades";
 				break;
 			case 2:
-				s="Hearts";
+				sv[0]="Hearts";
 				break;
 			case 3:
-				s="Clubs";
+				sv[0]="Clubs";
 				break;
 			case 4:
-				s="Diamonds";
+				sv[0]="Diamonds";
 				break;
 		}
-		var v = "";
 		switch(card[1]) {
 			case 1:
-				v="Ace";
+				sv[1]="Ace";
 				break;
 			case 11:
-				v="Jack";
+				sv[1]="Jack";
 				break;
 			case 12:
-				v="Queen";
+				sv[1]="Queen";
 				break;
 			case 13:
-				v="King";
+				sv[1]="King";
 				break;
 			default:
-				v=card[1].toString();
+				sv[1]=card[1].toString();
 		}
-		return v+"Of"+s;
-	}
+		return sv;
+}
+	//Cardname format for cardGen
+	function cardFormatImage(card) {
+		//var card = cardName();
+		return card[1]+"Of"+card[0];
+}
+	//Cardname format for text display
+	function cardFormatText(card) {
+		return " "+card[1]+" Of "+card[0];
+}
 	//Array of cards without repeat
-	function cardList(n) {
+	//create array before naming
+	function cardListArray(n) {
 		var x = [];
 		for (i=0; i<n; i++){
+			//var t = cardFormatImage();
 			var t = cardName();
 			if (x.indexOf(t)<0) x.push(t);
 			else i--;
@@ -106,10 +119,26 @@
 		listofCards=x;
 		return x;
 }	
+	//Cardlist name format for cardGen
+	function cardListFormatImage(cards) {
+		var cardsRenamed = [];
+		for (i=0; i<cards.length; i++) {
+			cardsRenamed[i] = cardFormatImage(cards[i]);
+		}
+		return cardsRenamed;
+}
+	//Cardlist name format for text display
+	function cardListFormatText(cards) {
+		var cardsRenamed = [];
+		for (i=0; i<cards.length; i++) {
+			cardsRenamed[i] = cardFormatText(cards[i]);
+		}
+		return cardsRenamed;
+}
 	//Image relative link formatter
 	function imageFormat(card) {
 		return "./cards/"+card+".svg";
-	}
+}
 	//DOM create card in Cards div
 	function setCard(card) {
 		var x = document.createElement("img");
@@ -133,18 +162,20 @@
   		activeClick=0;
 }
 	}
-	var listofCards=[];
 	//update clipboard
 	function updateCardlist() {
-		document.getElementById("listcards").innerHTML = "List of Cards: "+listofCards.toString();
+		var listofcards = cardListFormatText(listofCards);
+		document.getElementById("listcards").innerHTML = "List of Cards:"+listofcards.toString();
 		copyText();
-	}
+}
 	
 	//DOM create array of cards in Cards div
 	function createCards(n) {
 		//reset cards
 		clearCards();
-		x=cardList(n);
+		//var x=cardList(n);
+		var x = cardListArray(n);
+		x = cardListFormatImage(x);
 		for (i=0; i<x.length; i++){
 				createCard(x[i]);
 			}
@@ -161,17 +192,14 @@
 		createCards(n);
 		}
 }
-	//Click
-	var activeClick = 0;
-	var totalSwap = 0;
 	//Update clicks on display
 	function updateActive() {
 		document.getElementById("activeclick").innerHTML = "Active click(s): "+activeClick;
-	}
+}
 	//Update swaps on display
 	function updateTotal() {
 		document.getElementById("totalswap").innerHTML = "Total swap(s): "+totalSwap;
-	}
+}
 	//Toggle image opacity
 	function imageToggle(img) {
     	img.style.display = "inline-block";
@@ -186,7 +214,6 @@
 		}
 		updateActive();
 }
-	var undoCount=0;
 	//Undo
 	function undo() {
 			undoCount-=1;
@@ -208,12 +235,12 @@
 			activeClick=0;
 			totalSwap++;
 			updateTotal();*/
-	}
+}
 	//Redo
 	function redo() {
 			undoCount=1;
 			document.getElementById("undo").attributes.removeNamedItem("disabled");
-	}
+}
 	//Swap
 	function swap() {
 		if (activeClick!=2) {
@@ -236,7 +263,7 @@
 			updateTotal();
 			redo();
 			}
-	}
+}
 	//Copy cards to clipboard
 	function copyText() {
 	var copyTextareaBtn = document.querySelector('.js-textareacopybtn');
@@ -255,7 +282,12 @@
 	});
 }
 	//Allie Algorithm
+	function allie(){
+		var comparison=0;
+		var prevswap=0;
+		var original=listofCards;
 
+}
 </script>
 </head>
 
